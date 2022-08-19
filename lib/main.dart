@@ -123,6 +123,12 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  // Commit => Push
+
+  void register(){
+    // some code
+  }
+
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
