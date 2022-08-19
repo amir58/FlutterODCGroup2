@@ -125,11 +125,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
   // Commit => Push
 
-  void register(){
+  void loginWithGoogle(){
     // some code
   }
 
-  void loginWithGoogle(){
+  void loginWithFacebook(){
     // some code
   }
 
