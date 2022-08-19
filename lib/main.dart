@@ -3,6 +3,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:odcg2/NewsResponse.dart';
+import 'package:odcg2/shared.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   runApp(const MyApp());
@@ -68,10 +70,32 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
+    PreferenceUtils.init();
+
     // getHttp("eg");
     // getHttp("us");
-    signIn();
+    // signIn();
     login();
+
+    // testShared();
+  }
+
+  void testShared() async {
+    // final prefs = await SharedPreferences.getInstance();
+    //
+    // prefs.setString("username", "Amir");
+    //
+    // prefs.setString("userToken", "8as7fn384fb03f08d0hd8bsdx");
+    //
+    // String username = prefs.getString("apiToken") ?? "";
+    //
+    // print(username);
+
+    PreferenceUtils.setString(SharedKeys.language, "ar");
+
+    PreferenceUtils.setString(SharedKeys.username, "87ch387ch20gf36744g");
+
+    print(PreferenceUtils.getString(SharedKeys.username));
   }
 
   void getHttp(String country) async {
@@ -111,12 +135,42 @@ class _MyHomePageState extends State<MyHomePage> {
   void login() {
     Dio().post('https://lavie.orangedigitalcenteregypt.com/api/v1/auth/signin',
         data: {
-          "email": "string",
-          "password": "string",
-        }).then((response) {
+          "email": "attia6@gmail.com",
+          "password": "Aa123456",
+        }).then((response) async {
       print(response);
+
+      print(response.data['data']['accessToken']);
+      await PreferenceUtils.setString(
+          SharedKeys.apiToken, response.data['data']['accessToken']);
+
+      getProfile();
     }).catchError((error) {
-      if(error is DioError){
+      if (error is DioError) {
+        print(error.response);
+        print(error.response!.data['message']);
+      }
+    });
+  }
+
+  void getProfile() {
+    Dio()
+        .get(
+      'https://lavie.orangedigitalcenteregypt.com/api/v1/user/me',
+      options: Options(
+        headers: {
+          "Authorization":
+              "Bearer ${PreferenceUtils.getString(SharedKeys.apiToken)}",
+        },
+      ),
+    )
+        .then((response) {
+      print('- - - - - - - - - - - - -');
+      print(response);
+
+    }).catchError((error) {
+      if (error is DioError) {
+        print('- - - - - - - - - - - - -');
         print(error.response);
         print(error.response!.data['message']);
       }
@@ -125,11 +179,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
   // Commit => Push
 
-  void loginWithGoogle(){
+  void loginWithGoogle() {
     // some code
   }
 
-  void loginWithFacebook(){
+  void loginWithFacebook() {
     // some code
   }
 
