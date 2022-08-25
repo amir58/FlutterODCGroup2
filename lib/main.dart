@@ -2,7 +2,9 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:odcg2/NewsResponse.dart';
+import 'package:odcg2/bloc.dart';
 import 'package:odcg2/shared.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -30,7 +32,10 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: BlocProvider(
+        create: (context) => CounterCubit(),
+        child: CounterPage(),
+      ),
     );
   }
 }
@@ -167,7 +172,6 @@ class _MyHomePageState extends State<MyHomePage> {
         .then((response) {
       print('- - - - - - - - - - - - -');
       print(response);
-
     }).catchError((error) {
       if (error is DioError) {
         print('- - - - - - - - - - - - -');
